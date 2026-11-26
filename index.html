@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>try{const savedLanguage=localStorage.getItem("softspace-language");if(savedLanguage==="id"||savedLanguage==="en")document.documentElement.lang=savedLanguage;}catch(_){}</script>
+<title>SoftSpace — Muhamad Fadil</title>
+<meta name="description" content="SoftSpace is an independent digital studio by Muhamad Fadil, exploring web development, interface design and interactive digital experiences.">
+<meta name="theme-color" content="#F6F8FB">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SoftSpace">
+<meta property="og:title" content="SoftSpace — Muhamad Fadil">
+<meta property="og:description" content="An independent digital studio for thoughtful websites, expressive interfaces and browser-based experiments.">
+<meta property="og:image" content="https://far7code.github.io/assets/images/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/icons/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="style.css">
+<script>
+(() => {
+  const root = document.documentElement;
+  root.classList.add('js');
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reducedMotion) root.classList.add('motion');
+  try {
+    const key = 'softspace-page-transition';
+    const raw = sessionStorage.getItem(key);
+    if (raw) {
+      const state = JSON.parse(raw);
+      if (!reducedMotion && state.path === location.pathname && state.search === location.search && state.expires > Date.now()) {
+        const isLabDestination = location.pathname.split('/').pop().toLowerCase() === 'lab.html';
+        root.classList.add('ss-transition-entering', isLabDestination ? 'ss-transition-entering-lab' : 'ss-transition-entering-home');
+      }
+      sessionStorage.removeItem(key);
+    }
+  } catch (_) {
+    // Storage can be unavailable in private or local-file contexts. Navigation remains native.
+  }
+
+  // Play the studio intro only on the first direct Home entry in this tab session.
+  const isHomeDocument = ['', 'index.html'].includes(location.pathname.split('/').pop().toLowerCase());
+  if (isHomeDocument) {
+    const enteringFromPageTransition = root.classList.contains('ss-transition-entering');
+    let introAlreadySeen = false;
+    try {
+      introAlreadySeen = sessionStorage.getItem('softspace-home-intro-seen') === '1';
+      sessionStorage.setItem('softspace-home-intro-seen', '1');
+    } catch (_) {
+      // The intro can still run once on this document when session storage is unavailable.
+    }
+    if (!reducedMotion && !enteringFromPageTransition && !introAlreadySeen) {
+      root.classList.add('ss-home-intro-active');
+    }
+  }
+})();
+</script>
+</head>
+<body>
+<div class="home-intro" data-home-intro aria-hidden="true">
+  <div class="home-intro-atmosphere" aria-hidden="true">
+    <span class="home-intro-glow home-intro-glow--blue"></span>
+    <span class="home-intro-glow home-intro-glow--cyan"></span>
+    <span class="home-intro-grid"></span>
+  </div>
+  <div class="home-intro-signal" aria-hidden="true">
+    <i class="home-intro-signal-node home-intro-signal-node--one"></i>
+    <i class="home-intro-signal-node home-intro-signal-node--two"></i>
+    <i class="home-intro-signal-node home-intro-signal-node--three"></i>
+  </div>
+
+  <div class="home-intro-content">
+    <div class="home-intro-topline">
+      <span class="home-intro-kicker"><i aria-hidden="true"></i> INDEPENDENT DIGITAL STUDIO</span>
+      <span class="home-intro-serial">FIELD NOTE / 001 <b>—</b> 2026</span>
+    </div>
+
+    <div class="home-intro-main">
+      <span class="home-intro-overline">WEB / INTERFACE / CREATIVE CODE</span>
+      <h2 class="home-intro-wordmark"><span class="intro-soft">Soft</span><span class="intro-space">Space</span><span class="intro-period">.</span></h2>
+      <p class="home-intro-tagline">A space for ideas to become experiences.</p>
+      <div class="home-intro-founder">
+        <span class="home-intro-founder-index">FOUNDED BY</span>
+        <span class="home-intro-founder-name">MUHAMAD FADIL</span>
+      </div>
+    </div>
+
+    <div class="home-intro-bottomline">
+      <span>BUILD</span><b>/</b><span>EXPLORE</span><b>/</b><span>REPEAT</span>
+      <span class="home-intro-bottomnote">A DIGITAL PRACTICE IN MOTION</span>
+    </div>
+  </div>
+</div>
+<div class="page-transition" data-page-transition aria-hidden="true">
+  <div class="transition-mesh"></div>
+  <div class="transition-editorial">
+    <span class="transition-kicker">SOFTSPACE / DIGITAL STUDIO</span>
+    <span class="transition-title">ENTERING THE LAB</span>
+    <span class="transition-caption">A SPACE FOR EXPERIMENTS, MOTION &amp; CODE</span>
+  </div>
+  <span class="transition-rule"></span>
+</div>
+<canvas id="ambient-field" class="ambient-field" aria-hidden="true"></canvas>
+<div class="scroll-progress" id="scroll-progress" aria-hidden="true"><span></span></div>
+<a class="skip" href="#main">Skip to content</a>
+<header class="nav" id="nav">
+  <div class="wrap nav-in">
+    <a class="mark" href="#home" aria-label="SoftSpace, back to top">
+      <img class="mark-img" src="assets/images/softspace-logo-web.png" alt="SoftSpace logo" width="56" height="56" decoding="async">
+      <span class="mark-text">Soft<span>Space</span></span>
+    </a>
+    <nav class="menu" id="menu" aria-label="Primary">
+      <a href="#home">Home</a><a href="#about">Studio</a><a href="#skills">Capabilities</a><a href="#services">Services</a><a href="#projects">Work</a><a href="lab.html">Lab</a><a href="#contact">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="lang-toggle" id="langToggle" type="button" aria-label="Switch language to Indonesian" title="Switch language to Indonesian" aria-pressed="false"><span class="lang-toggle-code" data-lang-label>ID</span><i class="fa-solid fa-language" aria-hidden="true"></i></button>
+      <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <section id="home" class="hero hero-open" aria-labelledby="h-home">
+    <div class="wrap hero-inner">
+      <div class="hero-copy">
+        <div class="hero-topline">
+          <p class="hero-eyebrow">
+            <span class="eb-item"><span class="eb-dot" aria-hidden="true"></span>Independent digital practice</span>
+            <span class="eb-item eb-loc">Bekasi — Jakarta · ID</span>
+          </p>
+          <span class="hero-edition">FIELD NOTES / 001</span>
+        </div>
+
+        <h1 id="h-home" class="hero-title hero-brand-title" aria-label="SoftSpace">
+          <span class="hero-word hero-word-soft">Soft</span><span class="hero-word hero-word-space">Space</span><span class="hero-period">.</span>
+        </h1>
+
+        <div class="hero-subgrid">
+          <p class="hero-statement">An independent digital practice by <span>Muhamad Fadil.</span></p>
+          <div class="hero-body">
+            <p class="hero-lead">I build websites, design interfaces, and experiment with browser-based visuals and interactions.</p>
+            <div class="actions">
+              <a class="btn primary" href="#projects">See selected work<i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+              <a class="text-link hero-lab-link" href="lab.html">Explore the Lab<i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-index" aria-label="SoftSpace practice areas">
+          <span><b>01</b> Web development</span>
+          <span><b>02</b> Interface design</span>
+          <span><b>03</b> Creative code</span>
+        </div>
+      </div>
+    </div>
+
+    <aside class="signal signal-open" aria-label="Interactive SoftSpace field. Move the pointer to shift the network and click to send a ripple.">
+      <div class="signal-canvas">
+        <canvas id="field" role="img" aria-label="An interactive field of moving nodes and connections. Move the pointer to shift the field and click to send a ripple through it."></canvas>
+      </div>
+      <span class="signal-label signal-label-top" aria-hidden="true">LIVE FIELD <i>—</i> 001</span>
+      <span class="signal-label signal-label-bottom" aria-hidden="true">MOVE TO DISTURB · CLICK TO RIPPLE</span>
+    </aside>
+
+    <a class="scroll" href="#about"><span>Scroll to explore</span><span class="scroll-line" aria-hidden="true"></span></a>
+    <span class="hero-folio" aria-hidden="true">SOFTSPACE / BUILT IN THE BROWSER</span>
+  </section>
+
+  <section id="about" class="sec about-sec studio-sec" aria-labelledby="h-about">
+    <div class="wrap">
+      <p class="eyebrow" data-reveal><span class="eb-index">01</span><span>The Studio</span><span class="eb-rule" aria-hidden="true"></span></p>
+
+      <div class="studio-overview">
+        <div class="studio-overview-heading" data-reveal>
+          <p class="studio-overline">INDEPENDENT DIGITAL STUDIO</p>
+          <h2 id="h-about">Digital work, built around curiosity.</h2>
+        </div>
+        <div class="studio-overview-copy" data-reveal>
+          <p class="lead">SoftSpace is an independent digital studio founded by Muhamad Fadil, exploring the space between web development, interface design and creative code.</p>
+          <p>It brings practical website work and open-ended experiments into one practice. Each project is an opportunity to make something useful, understand a problem more clearly and discover a better way to shape the experience.</p>
+        </div>
+      </div>
+
+      <div class="studio-principles" aria-label="SoftSpace studio principles">
+        <article class="studio-principle" data-reveal>
+          <span class="studio-principle-no">01 / STRUCTURE</span>
+          <h3>Clarity before decoration.</h3>
+          <p>Start with the purpose, content and structure. Let the visual language support what the experience needs to do.</p>
+        </article>
+        <article class="studio-principle" data-reveal>
+          <span class="studio-principle-no">02 / INTERACTION</span>
+          <h3>Motion with meaning.</h3>
+          <p>Animation should guide, respond or reveal something. It should never get in the way of using the website.</p>
+        </article>
+        <article class="studio-principle" data-reveal>
+          <span class="studio-principle-no">03 / CURIOSITY</span>
+          <h3>Keep exploring.</h3>
+          <p>Client-facing work and experimental builds belong side by side. Both are ways to learn by making.</p>
+        </article>
+      </div>
+
+      <div class="founder-heading" data-reveal>
+        <p class="eyebrow"><span class="eb-index">MEET THE FOUNDER</span><span>The person behind SoftSpace</span><span class="eb-rule" aria-hidden="true"></span></p>
+        <p class="founder-heading-note">One founder. A hands-on practice. Room to explore.</p>
+      </div>
+
+      <div class="founder-grid">
+        <figure class="about-figure founder-figure" data-reveal>
+          <div class="portrait" id="portrait">
+            <img id="photo" src="assets/images/aboutMe.jpeg" width="1600" height="1198" alt="Muhamad Fadil presenting a project on stage" loading="lazy" decoding="async">
+            <span class="portrait-index" aria-hidden="true">SOFTSPACE / FOUNDER 001</span>
+          </div>
+          <figcaption class="mono-caption"><span>Muhamad Fadil</span><span>Founder · Developer</span></figcaption>
+        </figure>
+
+        <div class="founder-copy">
+          <p class="founder-role" data-reveal>FOUNDER <span>·</span> DEVELOPER <span>·</span> CREATIVE CODER</p>
+          <h2 id="h-founder" data-reveal>Hello, I'm Muhamad Fadil.</h2>
+          <div class="founder-text" data-reveal>
+            <p class="lead">I'm the founder and developer behind SoftSpace. I enjoy building websites from the ground up and exploring how design, code, interaction and experimentation can come together.</p>
+            <p>My work moves between frontend development, interface design and browser-based experiments. SoftSpace is where I put that curiosity into practice: building projects, refining ideas and documenting the process while continuing to learn.</p>
+          </div>
+          <div class="founder-focus" data-reveal>
+            <span class="founder-focus-label">CURRENT FOCUS</span>
+            <div class="founder-focus-tags"><span>Web development</span><span>Interface design</span><span>Creative coding</span></div>
+          </div>
+          <div class="about-links" data-reveal>
+            <a class="btn small" href="https://github.com/s0ftspace-dev" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-github" aria-hidden="true"></i>GitHub profile</a>
+            <a class="text-link" href="#journey">Explore my journey<i class="fa-solid fa-arrow-down" aria-hidden="true"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="journey" class="sec journey-sec" aria-labelledby="h-journey">
+    <div class="wrap">
+      <header class="sec-head" data-reveal>
+        <p class="eyebrow"><span class="eb-index">02</span><span>Founder Journey</span><span class="eb-rule" aria-hidden="true"></span></p>
+        <div class="sec-head-row">
+          <h2 id="h-journey">A documented learning curve.</h2>
+          <p class="sec-aside">2023 — 2026</p>
+        </div>
+        <p class="lead">A record of what I actually shipped, in order. Dates come from public repository activity, not from estimates.</p>
+      </header>
+      <ol class="journey" id="journey-track" aria-label="Learning journey from 2023 to 2026"></ol>
+      <p class="journey-note">Compiled from the public repositories I built while learning. The 2023 start is confirmed by me; no public repository from that year survives. Where GitHub shows only a single commit, the entry describes the work without inflating it.</p>
+    </div>
+  </section>
+
+  <section id="skills" class="sec skills-sec" aria-labelledby="h-skills">
+    <div class="wrap">
+      <header class="sec-head" data-reveal>
+        <p class="eyebrow"><span class="eb-index">03</span><span>Capabilities</span><span class="eb-rule" aria-hidden="true"></span></p>
+        <div class="sec-head-row">
+          <h2 id="h-skills">A growing technology practice.</h2>
+          <p class="sec-aside">Select a technology for context</p>
+        </div>
+      </header>
+      <p class="lead skills-intro" data-reveal>Capabilities are a living practice, not a claim of mastery. The labels below distinguish tools used in projects from technologies currently being explored.</p>
+      <div class="skills-legend" aria-label="Skill experience legend"><span><i class="level-dot active"></i>In practice</span><span><i class="level-dot practice"></i>Practicing</span><span><i class="level-dot explore"></i>Exploring</span></div>
+      <div class="skills" id="skills-index"></div>
+    </div>
+  </section>
+
+  <section id="services" class="sec services-sec" aria-labelledby="h-services">
+    <div class="wrap">
+      <header class="sec-head" data-reveal>
+        <p class="eyebrow"><span class="eb-index">04</span><span>Services</span><span class="eb-rule" aria-hidden="true"></span></p>
+        <div class="sec-head-row">
+          <h2 id="h-services">From a clear brief to a considered build.</h2>
+          <p class="sec-aside">What SoftSpace can help with</p>
+        </div>
+        <p class="lead">Focused digital services for people and small teams who need a considered web presence or a more expressive interface.</p>
+      </header>
+
+      <div class="service-grid">
+        <article class="service-card" data-reveal>
+          <div class="service-top"><span class="service-no">01 / BUILD</span><i class="fa-solid fa-window-maximize" aria-hidden="true"></i></div>
+          <h3>Website Development</h3>
+          <p>Purpose-built websites that communicate clearly and work across screen sizes.</p>
+          <ul><li>Landing pages</li><li>Company profile websites</li><li>Personal portfolios</li><li>Product and service showcases</li></ul>
+        </article>
+        <article class="service-card" data-reveal>
+          <div class="service-top"><span class="service-no">02 / SHAPE</span><i class="fa-solid fa-pen-ruler" aria-hidden="true"></i></div>
+          <h3>Interface &amp; UI Design</h3>
+          <p>Visual systems and page structures that make information easier to understand.</p>
+          <ul><li>Website layout direction</li><li>Visual hierarchy and typography</li><li>Responsive interface design</li><li>Design refinement</li></ul>
+        </article>
+        <article class="service-card" data-reveal>
+          <div class="service-top"><span class="service-no">03 / EXPLORE</span><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i></div>
+          <h3>Creative Web Experience</h3>
+          <p>Small interactive details that give a digital experience its own character.</p>
+          <ul><li>Canvas-based visuals</li><li>Purposeful motion and transitions</li><li>Interactive web components</li><li>Creative coding prototypes</li></ul>
+        </article>
+      </div>
+
+      <div class="approach-block" data-reveal>
+        <div class="approach-heading"><p class="eyebrow"><span class="eb-index">PROCESS</span><span>Our approach</span><span class="eb-rule" aria-hidden="true"></span></p><h3>A small process, with every step considered.</h3></div>
+        <ol class="approach-steps">
+          <li><span>01</span><div><h4>Discover</h4><p>Understand the goal, audience and real problem to solve.</p></div></li>
+          <li><span>02</span><div><h4>Shape</h4><p>Set the structure, content direction and visual language.</p></div></li>
+          <li><span>03</span><div><h4>Build</h4><p>Develop the interface, interactions and responsive behaviour.</p></div></li>
+          <li><span>04</span><div><h4>Refine</h4><p>Test, review and prepare the experience for launch.</p></div></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects" class="sec projects-sec" aria-labelledby="h-projects">
+    <div class="wrap">
+      <header class="sec-head" data-reveal>
+        <p class="eyebrow"><span class="eb-index">05</span><span>Selected Work</span><span class="eb-rule" aria-hidden="true"></span></p>
+        <div class="sec-head-row">
+          <h2 id="h-projects">Built with intent. Documented honestly.</h2>
+          <p class="sec-aside">05 selected projects</p>
+        </div>
+      </header>
+      <div class="project-filters" id="project-filters" role="group" aria-label="Filter selected work"></div>
+      <ol class="projects" id="project-list"></ol>
+    </div>
+  </section>
+
+  <section id="lab" class="lab-teaser" aria-labelledby="h-lab">
+    <div class="wrap">
+      <p class="eyebrow eyebrow-inverse"><span class="eb-index">06</span><span>Creative Lab</span><span class="eb-rule" aria-hidden="true"></span></p>
+      <div class="lab-teaser-top">
+        <h2 id="h-lab">A playground for <br><span>motion, sound &amp; code.</span></h2>
+        <a class="btn inverse" href="lab.html">Enter the Lab<i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+      </div>
+      <ol class="lab-index">
+        <li><a href="lab.html#panel-swarm"><span class="li-no">01</span><span class="li-name">Swarm Simulation</span><span class="li-tech">Canvas 2D · Boids</span><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a></li>
+        <li><a href="lab.html#panel-sound"><span class="li-no">02</span><span class="li-name">Sound Grid</span><span class="li-tech">Web Audio · Sequencer</span><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a></li>
+        <li><a href="lab.html#panel-playground"><span class="li-no">03</span><span class="li-name">Code Playground</span><span class="li-tech">HTML · CSS sandbox</span><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a></li>
+        <li><a href="lab.html#panel-gravity"><span class="li-no">04</span><span class="li-name">Gravity Playground</span><span class="li-tech">Canvas 2D · Physics</span><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a></li>
+        <li><a href="lab.html#panel-generative"><span class="li-no">05</span><span class="li-name">Generative Art</span><span class="li-tech">Procedural drawing</span><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a></li>
+        <li><a href="lab.html#panel-waves"><span class="li-no">06</span><span class="li-name">Wave Interference</span><span class="li-tech">Canvas · Oscillation</span><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a></li>
+        <li><a href="lab.html#panel-terrain"><span class="li-no">07</span><span class="li-name">Digital Terrain</span><span class="li-tech">Procedural landscape</span><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a></li>
+        <li><a href="lab.html#panel-typemotion"><span class="li-no">08</span><span class="li-name">Type in Motion</span><span class="li-tech">Canvas · Typography</span><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a></li>
+        <li><a href="lab.html#panel-colorlab"><span class="li-no">09</span><span class="li-name">Color Laboratory</span><span class="li-tech">Color systems</span><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a></li>
+        <li><a href="lab.html#panel-visualizer"><span class="li-no">10</span><span class="li-name">Sound Visualizer</span><span class="li-tech">Web Audio · Canvas</span><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a></li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="contact" class="sec contact-sec" aria-labelledby="h-contact">
+    <div class="wrap contact-grid">
+      <div class="contact-copy">
+        <p class="eyebrow" data-reveal><span class="eb-index">07</span><span>Contact</span><span class="eb-rule" aria-hidden="true"></span></p>
+        <h2 id="h-contact" data-reveal>Have a project in mind?</h2>
+        <p class="lead" data-reveal>Tell me what you are trying to make, what is not working yet, or where you need a second perspective. Start with a brief — we can shape the details together.</p>
+        <div class="contact-links" data-reveal>
+          <a class="btn" href="https://github.com/s0ftspace-dev" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-github" aria-hidden="true"></i>GitHub profile</a>
+          <a class="btn" href="https://www.instagram.com/softspace.dev/" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-instagram" aria-hidden="true"></i>Instagram</a>
+          <span class="mono-note">s0ftspace-dev · @softspace.dev</span>
+        </div>
+      </div>
+      <form id="contact-form" class="form" action="https://formspree.io/f/xeedlrdp" method="POST" novalidate data-reveal>
+        <div class="field">
+          <span class="label" id="topics-l">Topic (optional)</span>
+          <div class="topics" id="topics" role="group" aria-labelledby="topics-l"></div>
+        </div>
+        <div class="inquiry-row">
+          <div class="field">
+            <label for="f-service">Project type</label>
+            <select id="f-service" name="project_type">
+              <option value="Not sure yet">Not sure yet</option>
+              <option value="Website development">Website development</option>
+              <option value="Interface design">Interface design</option>
+              <option value="Creative web experience">Creative web experience</option>
+              <option value="Collaboration">Collaboration</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="f-budget">Budget range (optional)</label>
+            <select id="f-budget" name="budget_range">
+              <option value="Not decided">Not decided</option>
+              <option value="Under Rp1.000.000">Under Rp1.000.000</option>
+              <option value="Rp1.000.000–Rp3.000.000">Rp1.000.000–Rp3.000.000</option>
+              <option value="Rp3.000.000–Rp5.000.000">Rp3.000.000–Rp5.000.000</option>
+              <option value="Above Rp5.000.000">Above Rp5.000.000</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="f-timeline">Preferred timeline (optional)</label>
+          <input id="f-timeline" name="timeline" placeholder="e.g. December 2026 or flexible">
+        </div>
+        <div class="field">
+          <label for="f-name">Name</label>
+          <input id="f-name" name="name" autocomplete="name" required aria-describedby="e-name">
+          <p class="err" id="e-name"></p>
+        </div>
+        <div class="field">
+          <label for="f-email">Email</label>
+          <input id="f-email" name="email" type="email" autocomplete="email" required aria-describedby="e-email">
+          <p class="err" id="e-email"></p>
+        </div>
+        <div class="field">
+          <label for="f-message">Message</label>
+          <textarea id="f-message" name="message" required aria-describedby="e-message"></textarea>
+          <p class="err" id="e-message"></p>
+        </div>
+        <input type="hidden" name="topic" id="f-topic">
+        <p class="hp" aria-hidden="true"><label>Leave empty <input name="_gotcha" tabindex="-1" autocomplete="off"></label></p>
+        <div class="actions"><button class="btn primary" id="send" type="submit"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i><span class="send-label">Send message</span></button></div>
+        <p id="form-status" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+
+  <section class="sec faq-sec" id="faq" aria-labelledby="h-faq">
+    <div class="wrap faq-grid">
+      <div class="faq-intro" data-reveal>
+        <p class="eyebrow"><span class="eb-index">FAQ</span><span>Before we begin</span><span class="eb-rule" aria-hidden="true"></span></p>
+        <h2 id="h-faq">A few useful things to know.</h2>
+        <p class="lead">A starting point for common project questions. Specific scope, timing and availability are discussed after the brief.</p>
+      </div>
+      <div class="faq-list" data-reveal>
+        <details><summary>What kind of websites can SoftSpace build?</summary><p>Current focus includes landing pages, company profile websites, personal portfolios and product or service showcases. Scope is agreed before work begins.</p></details>
+        <details><summary>Can the design follow an existing brand?</summary><p>Yes. Existing logos, colors and brand direction can be used as the starting point. The interface is then shaped around the content and goals.</p></details>
+        <details><summary>How does a project usually start?</summary><p>Send a short brief using the inquiry form. We can clarify the audience, pages, features, references and priorities before defining the scope.</p></details>
+        <details><summary>Can I request revisions?</summary><p>Revision rounds and what they cover are agreed in the project scope before development begins.</p></details>
+        <details><summary>Do you provide maintenance after launch?</summary><p>Maintenance and follow-up support can be discussed separately depending on the project, hosting setup and update needs.</p></details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <span class="foot-brand"><img src="assets/images/softspace-logo-web.png" alt="" width="38" height="38" decoding="async">&copy; <span id="year"></span> SoftSpace</span>
+    <p class="foot-note">Independent digital studio by Muhamad Fadil · Design, development &amp; experiments</p>
+    <span class="foot-links">
+      <a href="https://github.com/s0ftspace-dev" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-github" aria-hidden="true"></i>GitHub</a>
+      <a href="https://www.instagram.com/softspace.dev/" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-instagram" aria-hidden="true"></i>Instagram</a>
+      <a href="https://github.com/FaR7COde/far7code.github.io" target="_blank" rel="noopener noreferrer">Source</a>
+    </span>
+  </div>
+</footer>
+
+<dialog class="proj-preview" id="pv-dialog" aria-labelledby="pv-title">
+  <div class="pv-head">
+    <div>
+      <p class="pv-kicker">Live preview</p>
+      <h2 class="pv-title" id="pv-title">Project</h2>
+      <p class="pv-url" id="pv-url"></p>
+    </div>
+    <div class="pv-tools">
+      <a class="btn" id="pv-open" href="#" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>Open in new tab</a>
+      <button class="icon-btn pv-close" id="pv-close" type="button" aria-label="Close preview"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+    </div>
+  </div>
+  <div class="pv-body">
+    <p class="pv-loading" id="pv-loading" role="status">Loading live preview…</p>
+    <iframe id="pv-frame" title="Live project preview" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"></iframe>
+  </div>
+</dialog>
+
+<script src="i18n.js"></script>
+<script src="cursor.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="ambient.js"></script>
+<script src="signal.js"></script>
+<script src="home.js"></script>
+<script src="script.js"></script>
+<script src="home-intro.js"></script>
+<script src="page-transition.js"></script>
+</body>
+</html>

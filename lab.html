@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>try{const savedLanguage=localStorage.getItem("softspace-language");if(savedLanguage==="id"||savedLanguage==="en")document.documentElement.lang=savedLanguage;}catch(_){}</script>
+<title>Lab — SoftSpace</title>
+<meta name="description" content="The SoftSpace Lab: interactive experiments in physics, generative visuals, typography, color, browser audio and code.">
+<meta name="theme-color" content="#070D18">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SoftSpace">
+<meta property="og:title" content="Lab — SoftSpace">
+<meta property="og:description" content="Ten interactive experiments in motion, sound, visual systems and code.">
+<meta property="og:image" content="https://far7code.github.io/assets/images/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/icons/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="style.css">
+<script>
+(() => {
+  const root = document.documentElement;
+  root.classList.add('js');
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reducedMotion) root.classList.add('motion');
+  try {
+    const key = 'softspace-page-transition';
+    const raw = sessionStorage.getItem(key);
+    if (raw) {
+      const state = JSON.parse(raw);
+      if (!reducedMotion && state.path === location.pathname && state.search === location.search && state.expires > Date.now()) {
+        const isLabDestination = location.pathname.split('/').pop().toLowerCase() === 'lab.html';
+        root.classList.add('ss-transition-entering', isLabDestination ? 'ss-transition-entering-lab' : 'ss-transition-entering-home');
+      }
+      sessionStorage.removeItem(key);
+    }
+  } catch (_) {
+    // Storage can be unavailable in private or local-file contexts. Navigation remains native.
+  }
+})();
+</script>
+</head>
+<body class="lab-page">
+<div class="page-transition" data-page-transition aria-hidden="true">
+  <div class="transition-mesh"></div>
+  <div class="transition-editorial">
+    <span class="transition-kicker">SOFTSPACE / DIGITAL STUDIO</span>
+    <span class="transition-title">ENTERING THE LAB</span>
+    <span class="transition-caption">A SPACE FOR EXPERIMENTS, MOTION &amp; CODE</span>
+  </div>
+  <span class="transition-rule"></span>
+</div>
+<canvas id="ambient-field" class="ambient-field" aria-hidden="true"></canvas>
+<a class="skip" href="#main">Skip to content</a>
+<header class="nav nav-lab" id="nav">
+  <div class="wrap nav-in">
+    <a class="mark" href="index.html" aria-label="SoftSpace, back to the portfolio">
+      <img class="mark-img" src="assets/images/softspace-logo-web.png" alt="SoftSpace logo" width="56" height="56" decoding="async">
+      <span class="mark-text">Soft<span>Space</span></span>
+    </a>
+    <nav class="menu" id="menu" aria-label="Primary">
+      <a href="index.html#home">Home</a><a href="index.html#about">Studio</a><a href="index.html#skills">Capabilities</a><a href="index.html#services">Services</a><a href="index.html#projects">Work</a><a href="lab.html" aria-current="page">Lab</a><a href="index.html#contact">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="lang-toggle" id="langToggle" type="button" aria-label="Switch language to Indonesian" title="Switch language to Indonesian" aria-pressed="false"><span class="lang-toggle-code" data-lang-label>ID</span><i class="fa-solid fa-language" aria-hidden="true"></i></button>
+      <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <section class="lab-head" aria-labelledby="h-lab">
+    <div class="wrap">
+      <a class="lab-back" href="index.html"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Back to portfolio</a>
+      <p class="eyebrow eyebrow-inverse" data-reveal><span class="eb-index">06</span><span>SoftSpace Lab</span><span class="eb-rule" aria-hidden="true"></span></p>
+      <h1 id="h-lab" data-reveal>Experiments in motion, sound &amp; code.</h1>
+      <p class="lead" data-reveal>A working playground for testing ideas through motion, physics, sound and visual systems. Shape the fields, add sources, move the type and tune the palette — every experiment runs directly in the browser.</p>
+      <ul class="lab-stats" data-reveal>
+        <li>10 experiments</li>
+        <li>Canvas 2D</li>
+        <li>Creative coding</li>
+        <li>Web Audio API</li>
+        <li>Sandboxed iframe</li>
+        <li>Pointer interactive</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="workbench" aria-label="Interactive experiment workbench">
+    <div class="wrap">
+      <div class="wb" id="wb">
+        <div class="wb-rail">
+          <p class="wb-rail-label">Select experiment</p>
+          <div class="wb-tabs-wrap">
+          <div class="wb-tabs" role="tablist" aria-orientation="vertical" aria-label="Lab experiments">
+            <button class="wb-tab is-active" id="tab-swarm" type="button" role="tab" aria-selected="true" aria-controls="panel-swarm" tabindex="0" data-exp="swarm">
+              <span class="wb-no" aria-hidden="true">01</span>
+              <span class="wb-tab-body"><span class="wb-name">Swarm Simulation</span><span class="wb-tech">Canvas 2D · Boids</span></span>
+              <span class="wb-ind" aria-hidden="true"></span>
+            </button>
+            <button class="wb-tab" id="tab-sound" type="button" role="tab" aria-selected="false" aria-controls="panel-sound" tabindex="-1" data-exp="sound">
+              <span class="wb-no" aria-hidden="true">02</span>
+              <span class="wb-tab-body"><span class="wb-name">Sound Grid</span><span class="wb-tech">Web Audio · Sequencer</span></span>
+              <span class="wb-ind" aria-hidden="true"></span>
+            </button>
+            <button class="wb-tab" id="tab-playground" type="button" role="tab" aria-selected="false" aria-controls="panel-playground" tabindex="-1" data-exp="playground">
+              <span class="wb-no" aria-hidden="true">03</span>
+              <span class="wb-tab-body"><span class="wb-name">Code Playground</span><span class="wb-tech">HTML · CSS sandbox</span></span>
+              <span class="wb-ind" aria-hidden="true"></span>
+            </button>
+            <button class="wb-tab" id="tab-gravity" type="button" role="tab" aria-selected="false" aria-controls="panel-gravity" tabindex="-1" data-exp="gravity"><span class="wb-no">04</span><span class="wb-tab-body"><span class="wb-name">Gravity Playground</span><span class="wb-tech">Canvas · Physics</span></span><span class="wb-ind"></span></button>
+            <button class="wb-tab" id="tab-generative" type="button" role="tab" aria-selected="false" aria-controls="panel-generative" tabindex="-1" data-exp="generative"><span class="wb-no">05</span><span class="wb-tab-body"><span class="wb-name">Generative Art</span><span class="wb-tech">Procedural drawing</span></span><span class="wb-ind"></span></button>
+            <button class="wb-tab" id="tab-waves" type="button" role="tab" aria-selected="false" aria-controls="panel-waves" tabindex="-1" data-exp="waves"><span class="wb-no">06</span><span class="wb-tab-body"><span class="wb-name">Wave Interference</span><span class="wb-tech">Canvas · Oscillation</span></span><span class="wb-ind"></span></button>
+            <button class="wb-tab" id="tab-terrain" type="button" role="tab" aria-selected="false" aria-controls="panel-terrain" tabindex="-1" data-exp="terrain"><span class="wb-no">07</span><span class="wb-tab-body"><span class="wb-name">Digital Terrain</span><span class="wb-tech">Procedural landscape</span></span><span class="wb-ind"></span></button>
+            <button class="wb-tab" id="tab-typemotion" type="button" role="tab" aria-selected="false" aria-controls="panel-typemotion" tabindex="-1" data-exp="typemotion"><span class="wb-no">08</span><span class="wb-tab-body"><span class="wb-name">Type in Motion</span><span class="wb-tech">Canvas · Typography</span></span><span class="wb-ind"></span></button>
+            <button class="wb-tab" id="tab-colorlab" type="button" role="tab" aria-selected="false" aria-controls="panel-colorlab" tabindex="-1" data-exp="colorlab"><span class="wb-no">09</span><span class="wb-tab-body"><span class="wb-name">Color Laboratory</span><span class="wb-tech">Color systems</span></span><span class="wb-ind"></span></button>
+            <button class="wb-tab" id="tab-visualizer" type="button" role="tab" aria-selected="false" aria-controls="panel-visualizer" tabindex="-1" data-exp="visualizer"><span class="wb-no">10</span><span class="wb-tab-body"><span class="wb-name">Sound Visualizer</span><span class="wb-tech">Web Audio · Canvas</span></span><span class="wb-ind"></span></button>
+          </div>
+          </div>
+          <div class="wb-rail-foot">
+            <p>Everything runs locally.<br>No network calls from the experiments.</p>
+          </div>
+        </div>
+
+        <div class="wb-main" id="wb-main">
+          <div class="wb-topbar">
+            <div class="wb-topbar-id">
+              <span class="wb-crumb">Lab / <span id="wb-active-no">01</span></span>
+              <strong class="wb-active-name" id="wb-active-name">Swarm Simulation</strong>
+            </div>
+            <div class="wb-top-actions">
+              <span class="wb-status"><i aria-hidden="true"></i><span id="wb-status-text">Running</span></span>
+              <button class="icon-btn" id="wb-full" type="button" aria-pressed="false" title="Toggle fullscreen for the workbench">
+                <i class="fa-solid fa-expand" aria-hidden="true"></i><span>Fullscreen</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="wb-stage" id="wb-stage">
+            <div class="wb-panel is-active" id="panel-swarm" role="tabpanel" aria-labelledby="tab-swarm" tabindex="0" data-panel="swarm">
+              <canvas id="swarm-canvas" role="img" aria-label="Swarm simulation. Boids flock together; move or drag over the canvas to attract them, and click to send a ripple."></canvas>
+              <span class="stage-hint">Move / drag to attract</span>
+              <div class="stage-readout"><span id="sw-boids">90 boids</span><span>Click to ripple</span></div>
+            </div>
+
+            <div class="wb-panel" id="panel-sound" role="tabpanel" aria-labelledby="tab-sound" tabindex="0" data-panel="sound" aria-hidden="true" inert>
+              <div class="seq-wrap">
+                <div class="seq-board">
+                  <div class="seq-notes" aria-hidden="true"><span>C5</span><span>A4</span><span>G4</span><span>E4</span></div>
+                  <div class="seq" id="seq" role="group" aria-label="Step sequencer, four notes by eight steps"></div>
+                  <div class="seq-steps" id="seq-steps" aria-hidden="true"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="wb-panel" id="panel-playground" role="tabpanel" aria-labelledby="tab-playground" tabindex="0" data-panel="playground" aria-hidden="true" inert>
+              <div class="pg-layout">
+                <div class="pg-editors">
+                  <div class="pg-pane">
+                    <div class="pane-head"><label for="pg-html">HTML</label><span>Markup</span></div>
+                    <textarea id="pg-html" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea>
+                  </div>
+                  <div class="pg-pane">
+                    <div class="pane-head"><label for="pg-css">CSS</label><span>Styles</span></div>
+                    <textarea id="pg-css" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea>
+                  </div>
+                </div>
+                <div class="pg-preview" id="pg-preview">
+                  <div class="pane-head"><span>Live preview</span><span class="pane-status" id="pg-status">Ready</span><button class="preview-exit" id="pg-exit" type="button"><i class="fa-solid fa-compress" aria-hidden="true"></i>Exit</button></div>
+                  <iframe id="pg-frame" title="Live preview of the HTML and CSS you write. Scripts are disabled." sandbox=""></iframe>
+                </div>
+              </div>
+            </div>
+            <div class="wb-panel extra-panel" id="panel-gravity" role="tabpanel" aria-labelledby="tab-gravity" tabindex="0" data-panel="gravity" aria-hidden="true" inert><canvas class="extra-canvas" id="canvas-gravity" aria-label="Particles falling and responding to pointer forces" role="img"></canvas><span class="stage-hint">Move to pull · click to place a gravity well · right-click to remove</span><div class="stage-readout"><span>Physics / 2D</span><span id="readout-gravity">80 bodies</span></div></div>
+            <div class="wb-panel extra-panel" id="panel-generative" role="tabpanel" aria-labelledby="tab-generative" tabindex="0" data-panel="generative" aria-hidden="true" inert><canvas class="extra-canvas" id="canvas-generative" aria-label="Procedurally generated flowing line artwork" role="img"></canvas><span class="stage-hint">Move to bend the field · click to reseed the composition</span><div class="stage-readout"><span>Generative / 01</span><span id="readout-generative">Flow field</span></div></div>
+            <div class="wb-panel extra-panel" id="panel-waves" role="tabpanel" aria-labelledby="tab-waves" tabindex="0" data-panel="waves" aria-hidden="true" inert><canvas class="extra-canvas" id="canvas-waves" aria-label="Animated wave interference patterns" role="img"></canvas><span class="stage-hint">Click anywhere to add a wave source · clear to start over</span><div class="stage-readout"><span>Wave system</span><span id="readout-waves">Live interference</span></div></div>
+            <div class="wb-panel extra-panel" id="panel-terrain" role="tabpanel" aria-labelledby="tab-terrain" tabindex="0" data-panel="terrain" aria-hidden="true" inert><canvas class="extra-canvas" id="canvas-terrain" aria-label="Layered procedural digital terrain landscape" role="img"></canvas><span class="stage-hint">Move to shift the depth · click to regenerate the landscape</span><div class="stage-readout"><span>Terrain / 2D</span><span id="readout-terrain">4 layers</span></div></div>
+            <div class="wb-panel extra-panel" id="panel-typemotion" role="tabpanel" aria-labelledby="tab-typemotion" tabindex="0" data-panel="typemotion" aria-hidden="true" inert><canvas class="extra-canvas" id="canvas-typemotion" aria-label="Large responsive typography moving around the pointer" role="img"></canvas><span class="stage-hint">Move to displace the glyphs · click to change the phrase</span><div class="stage-readout"><span>Type / Motion</span><span id="readout-typemotion">Variable position</span></div></div>
+            <div class="wb-panel extra-panel" id="panel-colorlab" role="tabpanel" aria-labelledby="tab-colorlab" tabindex="0" data-panel="colorlab" aria-hidden="true" inert><canvas class="extra-canvas" id="canvas-colorlab" aria-label="Interactive color palette laboratory responding to pointer position" role="img"></canvas><span class="stage-hint">Move to tune the palette · click a swatch to copy its HEX</span><div class="stage-readout"><span>Color / HSL</span><span id="readout-colorlab">Hue 210°</span></div></div>
+            <div class="wb-panel extra-panel" id="panel-visualizer" role="tabpanel" aria-labelledby="tab-visualizer" tabindex="0" data-panel="visualizer" aria-hidden="true" inert><canvas class="extra-canvas" id="canvas-visualizer" aria-label="Animated sound waveform visualizer, with optional generated tone" role="img"></canvas><span class="stage-hint">Switch visual modes · start audio to connect a live signal</span><div class="stage-readout"><span>Web Audio</span><span id="readout-visualizer">Audio off</span></div></div>
+          </div>
+
+          <div class="wb-console">
+            <div class="wb-controls is-active" data-controls="swarm" id="controls-swarm">
+              <div class="ctrl-row">
+                <span class="ctrl-field">Presets</span>
+                <div class="preset-group" role="group" aria-label="Swarm presets">
+                  <button class="lab-btn" type="button" data-swarm-preset="calm" aria-pressed="false">Calm</button>
+                  <button class="lab-btn" type="button" data-swarm-preset="dense" aria-pressed="false">Dense</button>
+                  <button class="lab-btn" type="button" data-swarm-preset="dynamic" aria-pressed="false">Dynamic</button>
+                </div>
+              </div>
+              <div class="ctrl-row">
+                <label class="ctrl-field" for="sw-count">Count <input id="sw-count" type="range" min="20" max="200" step="10" value="90"><output class="ctrl-value" id="sw-count-o" for="sw-count">90</output></label>
+                <label class="ctrl-field" for="sw-speed">Speed <input id="sw-speed" type="range" min="1" max="6" step="0.5" value="3"><output class="ctrl-value" id="sw-speed-o" for="sw-speed">3</output></label>
+                <button class="lab-btn primary" id="sw-play" type="button"><i class="fa-solid fa-pause" aria-hidden="true"></i><span>Pause</span></button>
+                <button class="lab-btn" id="sw-reset" type="button"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i>Reset</button>
+              </div>
+              <p class="ctrl-note">Boids follow separation, alignment and cohesion. The pointer adds a fourth force; clicks ripple through the flock.</p>
+            </div>
+
+            <div class="wb-controls" data-controls="sound" id="controls-sound">
+              <div class="ctrl-row">
+                <button class="lab-btn primary" id="sq-play" type="button"><i class="fa-solid fa-play" aria-hidden="true"></i><span>Start</span></button>
+                <button class="lab-btn" id="sq-clear" type="button"><i class="fa-solid fa-eraser" aria-hidden="true"></i>Clear</button>
+                <span class="playhead-readout">Step <b id="sq-step">—</b> / 08</span>
+              </div>
+              <div class="ctrl-row">
+                <label class="ctrl-field" for="sq-tempo">Tempo <input id="sq-tempo" type="range" min="70" max="180" value="110"><output class="ctrl-value" id="sq-tempo-o" for="sq-tempo">110</output></label>
+                <label class="ctrl-field" for="sq-vol">Volume <input id="sq-vol" type="range" min="0" max="100" value="50"><output class="ctrl-value" id="sq-vol-o" for="sq-vol">50%</output></label>
+              </div>
+              <div class="ctrl-row">
+                <span class="ctrl-field">Rhythm</span>
+                <div class="preset-group" role="group" aria-label="Rhythm presets">
+                  <button class="lab-btn" type="button" data-rhythm="pulse" aria-pressed="false">Pulse</button>
+                  <button class="lab-btn" type="button" data-rhythm="arp" aria-pressed="false">Arp</button>
+                  <button class="lab-btn" type="button" data-rhythm="sparse" aria-pressed="true">Sparse</button>
+                </div>
+              </div>
+              <p class="ctrl-note" id="sq-status" role="status">Audio is off. Press Start or toggle a cell to enable sound.</p>
+            </div>
+
+            <div class="wb-controls" data-controls="playground" id="controls-playground">
+              <div class="ctrl-row">
+                <button class="lab-btn" id="pg-reset" type="button"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i>Reset code</button>
+                <button class="lab-btn" id="pg-preview-full" type="button" aria-pressed="false"><i class="fa-solid fa-expand" aria-hidden="true"></i><span>Fullscreen preview</span></button>
+              </div>
+              <div class="ctrl-row">
+                <span class="playhead-readout">Sandbox <b>scripts off</b></span>
+                <span class="playhead-readout">Debounce <b>220 ms</b></span>
+              </div>
+              <p class="ctrl-note" id="pg-note" role="status">The preview is a sandboxed iframe. Scripts are disabled; only HTML and CSS are rendered.</p>
+            </div>
+
+            <div class="wb-controls" data-controls="gravity">
+              <div class="ctrl-row"><button class="lab-btn primary" id="gravity-toggle" type="button">Pause</button><button class="lab-btn" id="gravity-reset" type="button"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i>Reset field</button><button class="lab-btn" id="gravity-trails" type="button">Trails: On</button></div>
+              <div class="ctrl-row"><label class="ctrl-field" for="gravity-force">Gravity <input id="gravity-force" type="range" min="0" max="100" value="42"><output class="ctrl-value" id="gravity-force-o" for="gravity-force">42%</output></label></div>
+              <p class="ctrl-note">A live particle field with movable attractors. Click to place up to five gravity wells; right-click to remove the most recent. Adjust gravity and toggle trails to change the motion.</p>
+            </div>
+            <div class="wb-controls" data-controls="generative">
+              <div class="ctrl-row"><button class="lab-btn primary" id="generative-toggle" type="button">Pause</button><button class="lab-btn" id="generative-reset" type="button"><i class="fa-solid fa-shuffle" aria-hidden="true"></i>New seed</button><span class="ctrl-field">Mode</span><div class="preset-group" role="group" aria-label="Generative art mode"><button class="lab-btn is-active" type="button" data-generative-mode="flow" aria-pressed="true">Flow</button><button class="lab-btn" type="button" data-generative-mode="orbit" aria-pressed="false">Orbit</button><button class="lab-btn" type="button" data-generative-mode="bloom" aria-pressed="false">Bloom</button></div></div>
+              <p class="ctrl-note">Switch between three procedural compositions. The pointer bends the field; a click creates a new seed.</p>
+            </div>
+            <div class="wb-controls" data-controls="waves">
+              <div class="ctrl-row"><button class="lab-btn primary" id="waves-toggle" type="button">Pause</button><button class="lab-btn" id="waves-reset" type="button"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i>Restore sources</button><button class="lab-btn" id="waves-clear" type="button"><i class="fa-solid fa-eraser" aria-hidden="true"></i>Clear sources</button></div>
+              <p class="ctrl-note">Each click adds a new point source. Overlapping circular waves create bright and dark interference bands; clear the field to compose your own system.</p>
+            </div>
+            <div class="wb-controls" data-controls="terrain"><div class="ctrl-row"><button class="lab-btn primary" id="terrain-toggle" type="button">Pause</button><button class="lab-btn" id="terrain-reset" type="button"><i class="fa-solid fa-shuffle" aria-hidden="true"></i>Regenerate terrain</button></div><p class="ctrl-note">A layered synthetic landscape with a moving sky, atmospheric sun and four depth planes. Pointer movement shifts the ridgelines at different rates.</p></div>
+            <div class="wb-controls" data-controls="typemotion"><div class="ctrl-row"><button class="lab-btn primary" id="typemotion-toggle" type="button">Pause</button><button class="lab-btn" id="typemotion-reset" type="button"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i>Reset type</button><button class="lab-btn" id="typemotion-next" type="button"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i>Next phrase</button></div><p class="ctrl-note">Each glyph responds independently to a nearby pointer field. Click the stage or cycle through four phrases to change the composition.</p></div>
+            <div class="wb-controls" data-controls="colorlab"><div class="ctrl-row"><button class="lab-btn primary" id="colorlab-toggle" type="button">Pause</button><button class="lab-btn" id="colorlab-reset" type="button"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i>Reset palette</button><button class="lab-btn" id="colorlab-random" type="button"><i class="fa-solid fa-shuffle" aria-hidden="true"></i>Surprise me</button><button class="lab-btn" id="colorlab-copy" type="button"><i class="fa-regular fa-copy" aria-hidden="true"></i>Copy selected HEX</button></div><p class="ctrl-note">Move horizontally to tune hue and vertically to tune saturation. Select any swatch to copy its HEX value.</p></div>
+            <div class="wb-controls" data-controls="visualizer"><div class="ctrl-row"><button class="lab-btn primary" id="visualizer-toggle" type="button">Pause</button><button class="lab-btn" id="visualizer-mode" type="button">Mode: Radial</button><button class="lab-btn" id="visualizer-audio" type="button"><i class="fa-solid fa-volume-high" aria-hidden="true"></i>Start audio</button><button class="lab-btn" id="visualizer-reset" type="button"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i>Reset</button></div><p class="ctrl-note" id="visualizer-note" role="status">Audio is off. The synthetic signal is always visible; start audio to connect a generated tone and tune it with pointer movement.</p></div>
+
+            <div class="wb-info">
+              <p id="wb-desc">Boids follow three rules — separation, alignment and cohesion. The pointer adds attraction; clicks send a ripple through the flock.</p>
+              <dl class="wb-meta">
+                <div><dt>Engine</dt><dd id="wb-engine">Canvas 2D · Boids</dd></div>
+                <div><dt>State</dt><dd id="wb-state">Running</dd></div>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="lab-foot" aria-label="Lab notes">
+    <div class="wrap lab-foot-in">
+      <span>SoftSpace Lab · 2026</span>
+      <span>Vanilla JavaScript · Canvas 2D · Web Audio API · GSAP</span>
+      <a href="index.html#contact">Suggest an experiment<i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <span class="foot-brand"><img src="assets/images/softspace-logo-web.png" alt="" width="38" height="38" decoding="async">&copy; <span id="year"></span> SoftSpace</span>
+    <p class="foot-note">Independent digital studio by Muhamad Fadil · Creative coding playground</p>
+    <span class="foot-links">
+      <a href="https://github.com/s0ftspace-dev" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-github" aria-hidden="true"></i>GitHub</a>
+      <a href="https://www.instagram.com/softspace.dev/" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-instagram" aria-hidden="true"></i>Instagram</a>
+      <a href="https://github.com/FaR7COde/far7code.github.io" target="_blank" rel="noopener noreferrer">Source</a>
+    </span>
+  </div>
+</footer>
+
+<script src="i18n.js"></script>
+<script src="cursor.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="ambient.js"></script>
+<script src="lab-extras.js"></script>
+<script src="lab.js"></script>
+<script src="script.js"></script>
+<script src="page-transition.js"></script>
+</body>
+</html>

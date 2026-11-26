@@ -472,9 +472,7 @@
   function updateMetadata() {
     const isID = currentLanguage === 'id';
     const home = !/lab\.html$/i.test(location.pathname);
-    document.title = isID
-      ? (home ? 'SoftSpace — Muhamad Fadil' : 'Lab — SoftSpace')
-      : (home ? 'SoftSpace — Muhamad Fadil' : 'Lab — SoftSpace');
+    document.title = home ? 'SoftSpace — Independent Digital Studio' : 'Lab — SoftSpace';
     const description = home
       ? (isID
         ? 'SoftSpace adalah studio digital independen oleh Muhamad Fadil, mengeksplorasi pengembangan web, desain antarmuka, dan pengalaman digital interaktif.'

@@ -5,7 +5,6 @@
   const ScrollTrigger = window.ScrollTrigger;
   const reduceQuery = matchMedia('(prefers-reduced-motion: reduce)');
   const canAnimate = () => Boolean(window.gsap) && !reduceQuery.matches && document.documentElement.classList.contains('motion');
-  const REPO_URL = 'https://github.com/FaR7COde/far7code.github.io';
   const PROFILE_URL = 'https://github.com/s0ftspace-dev';
 
   const SKILLS = [
@@ -76,16 +75,22 @@
 
   const PROJECTS = [
     {
-      name: 'SoftSpace Portfolio',
-      category: 'Portfolio',
-      icon: 'fa-layer-group',
-      tone: 't-sand',
-      desc: 'A personal portfolio and creative coding playground in plain HTML, CSS and JavaScript.',
-      stack: ['HTML', 'CSS', 'JavaScript', 'GSAP', 'Canvas'],
-      status: 'In progress',
-      details: 'Built without a framework or build step. The hero uses a Canvas 2D signal field, section reveals use GSAP ScrollTrigger, and the Lab holds interactive browser experiments.', caseStudy: { challenge: 'Create a personal site that demonstrates both interface craft and working browser experiments.', approach: 'Use semantic HTML, hand-written CSS, vanilla JavaScript, Canvas 2D and GSAP for purposeful motion.', outcome: 'A multi-section portfolio with a live signal field, project previews and an interactive Lab.' },
-      live: 'https://far7code.github.io/',
-      source: REPO_URL
+      name: 'JelajahNusa',
+      category: 'Website',
+      icon: 'fa-map-location-dot',
+      tone: 't-sage',
+      featured: true,
+      desc: 'A multi-page travel website for discovering Indonesian destinations, curated packages and trip ideas.',
+      stack: ['HTML5', 'CSS3', 'Bootstrap 5', 'JavaScript', 'GSAP', 'ScrollTrigger', 'Lenis'],
+      status: 'Frontend travel experience',
+      details: 'A multi-page travel experience with destination guides, curated packages and a three-step trip planner. Booking and contact flows are frontend simulations; no booking or personal data is sent to a server.',
+      caseStudy: {
+        challenge: 'Present Indonesian destinations and travel packages through an engaging, easy-to-explore experience.',
+        approach: 'Combine editorial destination pages, package details and a guided trip planner with responsive layouts and motion.',
+        outcome: 'A published multi-page website with an interactive trip-planning simulation and no backend booking system.'
+      },
+      live: 'https://softfar.github.io/JelajahNusa-Discover-Indonesia/',
+      preview: true
     },
     {
       name: 'Arunika Perfume',
@@ -460,7 +465,7 @@
         actions.push(toggle);
       }
 
-      const card = h('li', { class: 'proj' },
+      const card = h('li', { class: 'proj' + (project.featured ? ' proj-featured' : '') },
         h('div', { class: 'proj-top' },
           h('span', { class: 'tile-ico ' + project.tone }, icon('fa-solid ' + project.icon)),
           h('span', { class: 'no', text: String(index + 1).padStart(2, '0') })
